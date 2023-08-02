@@ -1,8 +1,14 @@
 # views.py
-from rest_framework.request import Request
-from rest_framework.views import APIView
+from rest_framework import generics
+from products_api.models import Product
+from products_api.serializers import ProductSerializers
 
 
-class StartParsingView(APIView):
-    def post(self, request: Request):
-        return {}
+class ProductList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializers
+
+
+class ProductDetail(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializers
