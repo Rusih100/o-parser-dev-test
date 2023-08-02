@@ -134,6 +134,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# Django REST framework
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
