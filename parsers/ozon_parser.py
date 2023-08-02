@@ -1,11 +1,11 @@
 from time import sleep
+from typing import List, NamedTuple, Optional
 
-from selenium.common import NoSuchElementException, StaleElementReferenceException
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from parsers.abstract_parser import AbstractChromeParser
-from typing import List, Any, NamedTuple, Optional
 from parsers.utils import has_cyrillic
 
 
@@ -22,29 +22,19 @@ class Card(NamedTuple):
 
 
 class OzonParser(AbstractChromeParser):
-
     _url = r"https://www.ozon.ru/seller/1/products/"
 
-    def parse_page(self, id_: int) -> None:
+    def parse_page(self, page_id: int) -> List[WebElement]:
         self._driver.close()
         self._driver.start_session({})
-        self._driver.get(self._url + f"?miniapp=seller_1&page={id_}")
-        sleep(3)
+        self._driver.get(self._url + f"?miniapp=seller_1&page={page_id}")
+        sleep(self._sleep_time)
 
-        raw_cards = self._driver.find_elements(
-            by=By.XPATH,
-            value="//*[@id='paginatorContent']/div/div/div"  # FIX
+        return self._driver.find_elements(
+            by=By.XPATH, value="//*[@id='paginatorContent']/div/div/div"
         )
-        print(len(raw_cards))
-        for raw_card in raw_cards:
-            card = self.parse_card(raw_card)
-            if card is not None:
-                self._cards.append(card)
-
-        sleep(self._sleep_time * 2)
 
     def parse_card(self, raw_card: WebElement) -> Optional[Card]:
-
         # Выдаст все параметры карточки, каждый параметр на своей строке
         body = raw_card.text.split("\n")
 
@@ -74,7 +64,7 @@ class OzonParser(AbstractChromeParser):
             rating=rating,
             comments_amount=comments_amount,
             delivery_date=delivery_date,
-            url=url
+            url=url,
         )
 
     @staticmethod
@@ -87,8 +77,9 @@ class OzonParser(AbstractChromeParser):
 
     def is_last_page(self) -> bool:
         try:
-            self._driver.find_element(By.CSS_SELECTOR, '[data-widget="searchResultsError"]')
+            self._driver.find_element(
+                by=By.CSS_SELECTOR, value='[data-widget="searchResultsError"]'
+            )
             return True
         except NoSuchElementException:
             return False
-
