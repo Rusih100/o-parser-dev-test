@@ -13,6 +13,7 @@ djangorestframework = "^3.14.0"
 django-environ = "^0.10.0"
 django-mysql = "^3.8.1"
 mysqlclient = "^2.2.0"
+selenium = "^4.11.2"
 
 
 [tool.poetry.group.dev.dependencies]
