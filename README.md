@@ -79,6 +79,8 @@ P.S. Контейнеры можно запустить в фоне:
     
 Запустите Flower (Опционально):    
 ```celery -A django_ozon_parser flower``` 
+    
+Примечание: Для работы уведомлений необходимо предварительно написать боту /start.  
 
 ## Скринкаст админки
 ![Скринкаст](https://raw.githubusercontent.com/Rusih100/rusih100-test-o-parser/master/screencast_1.png?token=GHSAT0AAAAAACAJAY3FECVUWZHOD36HONZ4ZGLVWJA)
