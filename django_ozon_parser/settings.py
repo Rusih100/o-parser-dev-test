@@ -92,6 +92,12 @@ DATABASES = {
         "PASSWORD": env("DB_PASSWORD"),
         "HOST": env("DB_HOST"),
         "PORT": env("DB_PORT"),
+        'OPTIONS': {
+            'init_command': "SET NAMES 'utf8mb4';SET sql_mode='STRICT_TRANS_TABLES';",
+            'read_default_file': '/platform/auth/mysql.conf',
+            'charset': 'utf8mb4',
+        },
+        'ATOMIC_REQUESTS': True,
     }
 }
 
@@ -135,8 +141,19 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 # Django REST framework
-
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
 }
+
+# Подключение к Redis как брокер сообщений для Celery
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+
+# Опциональные настройки Celery
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")  # Для хранения результатов задач
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
+PARSER_WEB_DRIVER_PATH = BASE_DIR / "drivers" / "chromedriver.exe"

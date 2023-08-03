@@ -19,7 +19,7 @@ class AbstractChromeParser(ABC):
     def __init__(self, webdriver_path: Path) -> None:
         self._options = ChromeOptions()
 
-        # self._options.add_argument('--headless=new')
+        self._options.add_argument("--headless")
         self._options.add_argument(f"user-agent={self._user_agent}")
 
         self._service = ChromeService(webdriver_path.as_posix())

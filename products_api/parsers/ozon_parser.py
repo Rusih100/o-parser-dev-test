@@ -5,8 +5,8 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from parsers.abstract_parser import AbstractChromeParser
-from parsers.utils import has_cyrillic
+from products_api.parsers.abstract_parser import AbstractChromeParser
+from products_api.parsers.utils import has_cyrillic
 
 
 class Card(NamedTuple):

@@ -13,4 +13,16 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     restart: always
     volumes:
-      - ./db_django:/var/lib/mysql
+      - ./docker_data/db_django:/var/lib/mysql
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+  # TODO: Пароль к redis
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - ./docker_data/redis_data:/var/lib/redis
