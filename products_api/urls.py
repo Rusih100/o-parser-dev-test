@@ -1,17 +1,8 @@
-from django.urls import include, path
-from rest_framework import routers
+from django.urls import path
 
 from . import views
 
-router = routers.DefaultRouter()
-
-
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path("products", views.ProductList.as_view()),
-    path("products/<int:pk>", views.ProductDetail.as_view()),
-    path("", include(router.urls)),
+    path("products", views.ProductsApiView.as_view(), name="products"),
+    path("products/<int:pk>", views.ProductDetail.as_view(), name="detail_product"),
 ]
-
-urlpatterns += router.urls

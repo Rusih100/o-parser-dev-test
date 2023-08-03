@@ -1,4 +1,6 @@
 .idea
 .env
 
-db_django
+docker_data/db_django
+docker_data/redis_data
+docker_data
