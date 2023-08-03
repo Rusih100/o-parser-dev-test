@@ -5,10 +5,10 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from products_api import tasks
 from products_api.models import Product
 from products_api.paginator import Paginator
 from products_api.serializers import ProductSerializer
-from products_api import tasks
 
 
 class ProductDetail(RetrieveAPIView):
@@ -36,9 +36,13 @@ class ProductsApiView(APIView):
             if product_count is None:
                 product_count = 10
             elif 0 > product_count or product_count > 50:
-                raise ValidationError("0 < product_count <= 50", code=status.HTTP_400_BAD_REQUEST)
+                raise ValidationError(
+                    "0 < product_count <= 50", code=status.HTTP_400_BAD_REQUEST
+                )
             elif not isinstance(product_count, int):
-                raise ValidationError("product_count is integer", code=status.HTTP_400_BAD_REQUEST)
+                raise ValidationError(
+                    "product_count is integer", code=status.HTTP_400_BAD_REQUEST
+                )
 
             tasks.parsing_product_task.delay(product_count)
             return Response(
