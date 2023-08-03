@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('products_api', '0002_auto_20230803_1750'),
+        ("products_api", "0002_auto_20230803_1750"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='url',
+            model_name="product",
+            name="url",
             field=models.TextField(max_length=1000),
         ),
     ]
