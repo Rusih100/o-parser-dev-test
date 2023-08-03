@@ -71,11 +71,14 @@ P.S. Контейнеры можно запустить в фоне:
 Запустите сервер Django:    
 ```python manage.py runserver```  
    
-Запустите Flower (Опционально):    
-```celery -A django_ozon_parser flower```   
-
+### 6. Запуск Celery и Flower  
+Для парсера нужен веб-браузер [Chrome](https://www.google.ru/chrome/) и [драйвер](https://chromedriver.chromium.org/). В директории _drivers_ лежит дравер для windows, если оперционная система отличается, необходимо его заменить и, в крайнем случае, необходимо поправить путь в settings.py 
+    
 Запустите Celery:  
 ```celery -A django_ozon_parser worker --loglevel=info --pool=solo```   
+    
+Запустите Flower (Опционально):    
+```celery -A django_ozon_parser flower``` 
 
 ## Скринкаст админки
 ![Скринкаст](https://raw.githubusercontent.com/Rusih100/rusih100-test-o-parser/master/screencast_1.png?token=GHSAT0AAAAAACAJAY3FECVUWZHOD36HONZ4ZGLVWJA)
