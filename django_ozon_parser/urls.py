@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django_ozon_parser.yasg import urlpatterns as docs_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("products_api.urls")),
 ]
+
+urlpatterns += docs_urls

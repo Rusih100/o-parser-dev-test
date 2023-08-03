@@ -17,6 +17,8 @@ selenium = "^4.11.2"
 celery = {extras = ["redis"], version = "^5.3.1"}
 flower = "^2.0.0"
 requests = "^2.31.0"
+drf-yasg = "^1.21.7"
+django-adminlte3 = "^0.1.6"
 
 
 [tool.poetry.group.dev.dependencies]
