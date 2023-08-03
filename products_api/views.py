@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 
 from products_api.models import Product
 from products_api.paginator import Paginator
-from products_api.serializers import ParseViewSerializer, ProductSerializer
+from products_api.serializers import ProductSerializer
+from products_api import tasks
 
 
 class ProductDetail(RetrieveAPIView):
@@ -30,9 +31,16 @@ class ProductsApiView(APIView):
 
     def post(self, request: Request, *args, **kwargs) -> Response:
         try:
-            serializer = ParseViewSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            product_count = serializer.validated_data.get("product_count", 10)
+            product_count = request.data.get("product_count", None)
+
+            if product_count is None:
+                product_count = 10
+            elif 0 > product_count or product_count > 50:
+                raise ValidationError("0 < product_count <= 50", code=status.HTTP_400_BAD_REQUEST)
+            elif not isinstance(product_count, int):
+                raise ValidationError("product_count is integer", code=status.HTTP_400_BAD_REQUEST)
+
+            tasks.parsing_product_task.delay(product_count)
             return Response(
                 {
                     "detail": f"A request for parsing {product_count} records has been created"
