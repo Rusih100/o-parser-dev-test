@@ -1,8 +1,55 @@
 version: '3'
 
 services:
-  db:
-    image: mysql:5.7
+  django:
+    container_name: django
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    restart: always
+    command: sh prestart.sh
+    depends_on:
+      selenium:
+        condition: service_started
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    container_name: worker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
+    command: poetry run poetry run celery -A django_ozon_parser worker --loglevel=info
+    depends_on:
+      django:
+        condition: service_started
+      selenium:
+        condition: service_started
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  selenium:
+    container_name: selenium
+    hostname: ${SELENIUM_HOST}
+    image: selenium/standalone-chrome
+    ports:
+      - '4444:4444'
+
+  database:
+    image: mysql:8.1.0
+    container_name: database
+    hostname: ${DB_HOST}
     ports:
       - '3306:3306'
     env_file:
@@ -15,10 +62,16 @@ services:
     volumes:
       - ./docker_data/db_django:/var/lib/mysql
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    healthcheck:
+      test: mysql ${DB_NAME} --user=${DB_USER} --password='${DB_PASSWORD}' --silent --execute "SELECT 1;"
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # TODO: Пароль к redis
   redis:
     image: redis:alpine
+    container_name: redis
+    hostname: ${REDIS_HOST}
     ports:
       - '6379:6379'
     env_file:
@@ -26,3 +79,8 @@ services:
     restart: always
     volumes:
       - ./docker_data/redis_data:/var/lib/redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

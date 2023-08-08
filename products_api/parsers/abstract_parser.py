@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
-from pathlib import Path
 from time import sleep
 from typing import List, NamedTuple, Optional
 
 from selenium.webdriver import Chrome, ChromeOptions, ChromeService
 from selenium.webdriver.remote.webelement import WebElement
+
+from selenium import webdriver
 
 
 class AbstractChromeParser(ABC):
@@ -16,14 +17,13 @@ class AbstractChromeParser(ABC):
 
     _user_agent = r"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 
-    def __init__(self, webdriver_path: Path) -> None:
+    def __init__(self, webdriver_url: str) -> None:
         self._options = ChromeOptions()
         self._options.add_argument("--disable-gpu")
         self._options.add_argument("--headless")
         self._options.add_argument(f"user-agent={self._user_agent}")
 
-        self._service = ChromeService(webdriver_path.as_posix())
-        self._driver = Chrome(service=self._service, options=self._options)
+        self._driver = webdriver.Remote(command_executor=webdriver_url, options=self._options)
 
     def __del__(self):
         self._driver.quit()

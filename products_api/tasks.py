@@ -11,7 +11,7 @@ from products_api.parsers.ozon_parser import Card, OzonParser
 @shared_task
 def parsing_product_task(product_count: int) -> None:
     try:
-        parser = OzonParser(webdriver_path=settings.PARSER_WEB_DRIVER_PATH)
+        parser = OzonParser(webdriver_url=settings.SELENIUM_URL)
         products: List[NamedTuple] = parser.parse(count=product_count)
     except Exception as e:
         send_error_alert(f"Произошла ошибка парсинга: {e}")
