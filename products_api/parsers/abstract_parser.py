@@ -2,49 +2,76 @@ from abc import ABC, abstractmethod
 from time import sleep
 from typing import List, NamedTuple, Optional
 
-from selenium.webdriver import Chrome, ChromeOptions, ChromeService
-from selenium.webdriver.remote.webelement import WebElement
-
 from selenium import webdriver
+from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class AbstractChromeParser(ABC):
-    _url: str = r""
-    _options: Optional[ChromeOptions] = None
-    _service: Optional[ChromeService] = None
-    _driver: Optional[Chrome] = None
-    _sleep_time: int = 5
+    """
+    Абстрактный парсер сайта, для реализации фабричных методов.
+    """
 
-    _user_agent = r"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    webdriver_url: str = ""
+    options: Optional[ChromeOptions] = None
+    driver: Optional[Chrome] = None
+    sleep_time: int = 3
+
+    user_agent = r"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 
     def __init__(self, webdriver_url: str) -> None:
-        self._options = ChromeOptions()
-        self._options.add_argument("--disable-gpu")
-        self._options.add_argument("--headless")
-        self._options.add_argument(f"user-agent={self._user_agent}")
+        self.webdriver_url = webdriver_url
 
-        self._driver = webdriver.Remote(command_executor=webdriver_url, options=self._options)
+    def setup_options(self) -> ChromeOptions:
+        options = ChromeOptions()
+        options.add_argument("--disable-gpu")
+        options.add_argument("--headless")
+        options.add_argument(f"user-agent={self.user_agent}")
+        return options
 
-    def __del__(self):
-        self._driver.quit()
+    def _parse_cards_from_page(self, url: str) -> List[NamedTuple]:
+        driver = webdriver.Remote(
+            command_executor=self.webdriver_url, options=self.setup_options()
+        )
+        cards: List[NamedTuple] = []
 
-    def _open_url(self) -> None:
-        self._driver.get(self._url)
-        sleep(self._sleep_time)
+        try:
+            driver.get(url)
+            sleep(self.sleep_time)
 
-    def parse(self, count: int) -> List[NamedTuple]:
-        self._open_url()
+            raw_cards = self.find_cards(driver)
+            cards += self._parse_raw_cards(raw_cards)
 
+        except Exception as e:
+            ...
+        finally:
+            driver.close()
+            driver.quit()
+            sleep(self.sleep_time)
+
+        return cards
+
+    def parse_website(self, objects_count: int) -> List[NamedTuple]:
+        return self._parse_all_pages(objects_count=objects_count)
+
+    def _parse_all_pages(self, objects_count: int) -> List[NamedTuple]:
         current_page = 1
-        raw_cards = []
+        cards: List[NamedTuple] = []
 
-        while not self.is_last_page() and len(raw_cards) < count:
-            raw_cards += self.parse_page(current_page)
+        while len(cards) < objects_count:
+            url = self.get_page_url(current_page)
+
+            current_page_cards = self._parse_cards_from_page(url)
+            cards += current_page_cards
+
             current_page += 1
-            sleep(self._sleep_time)
+            sleep(self.sleep_time)
 
-        raw_cards = raw_cards[:count]
-        return self._parse_raw_cards(raw_cards)
+            if not current_page_cards:
+                break
+
+        return cards[:objects_count]
 
     def _parse_raw_cards(self, raw_cards: List[WebElement]) -> List[NamedTuple]:
         cards = []
@@ -54,17 +81,23 @@ class AbstractChromeParser(ABC):
             if card is not None:
                 cards.append(card)
 
-        sleep(self._sleep_time)
+        sleep(self.sleep_time)
         return cards
 
+    @property
     @abstractmethod
-    def parse_page(self, page_id: int) -> List[WebElement]:
+    def url(self) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_page_url(self, page: int) -> str:
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def find_cards(driver: WebDriver) -> List[WebElement]:
         raise NotImplementedError
 
     @abstractmethod
     def parse_card(self, raw_card: WebElement) -> NamedTuple:
-        raise NotImplementedError
-
-    @abstractmethod
-    def is_last_page(self) -> bool:
         raise NotImplementedError

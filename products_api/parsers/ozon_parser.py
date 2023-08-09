@@ -3,6 +3,7 @@ from typing import List, NamedTuple, Optional
 
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 from products_api.parsers.abstract_parser import AbstractChromeParser
@@ -22,15 +23,16 @@ class Card(NamedTuple):
 
 
 class OzonParser(AbstractChromeParser):
-    _url = r"https://www.ozon.ru/seller/1/products/"
+    @property
+    def url(self) -> str:
+        return r"https://www.ozon.ru/seller/1/products/"
 
-    def parse_page(self, page_id: int) -> List[WebElement]:
-        self._driver.close()
-        self._driver.start_session({})
-        self._driver.get(self._url + f"?miniapp=seller_1&page={page_id}")
-        sleep(self._sleep_time)
+    def get_page_url(self, page: int) -> str:
+        return self.url + f"?miniapp=seller_1&page={page}"
 
-        return self._driver.find_elements(
+    @staticmethod
+    def find_cards(driver: WebDriver) -> List[WebElement]:
+        return driver.find_elements(
             by=By.XPATH, value="//*[@id='paginatorContent']/div/div/div"
         )
 
@@ -74,12 +76,3 @@ class OzonParser(AbstractChromeParser):
             if char.isdigit():
                 buffer += char
         return int(buffer)
-
-    def is_last_page(self) -> bool:
-        try:
-            self._driver.find_element(
-                by=By.CSS_SELECTOR, value='[data-widget="searchResultsError"]'
-            )
-            return True
-        except NoSuchElementException:
-            return False

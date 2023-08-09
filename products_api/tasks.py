@@ -3,7 +3,7 @@ from typing import List, NamedTuple
 from celery import shared_task
 from django.conf import settings
 
-from products_api.bot_alerts import send_parsing_status_alert, send_error_alert
+from products_api.bot_alerts import send_error_alert, send_parsing_status_alert
 from products_api.models import Product
 from products_api.parsers.ozon_parser import Card, OzonParser
 
@@ -12,7 +12,7 @@ from products_api.parsers.ozon_parser import Card, OzonParser
 def parsing_product_task(product_count: int) -> None:
     try:
         parser = OzonParser(webdriver_url=settings.SELENIUM_URL)
-        products: List[NamedTuple] = parser.parse(count=product_count)
+        products: List[NamedTuple] = parser.parse_website(objects_count=product_count)
     except Exception as e:
         send_error_alert(f"Произошла ошибка парсинга: {e}")
         return

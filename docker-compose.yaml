@@ -13,7 +13,7 @@ services:
     restart: always
     command: sh prestart.sh
     depends_on:
-      selenium:
+      selenium-hub:
         condition: service_started
       database:
         condition: service_healthy
@@ -32,24 +32,39 @@ services:
     depends_on:
       django:
         condition: service_started
-      selenium:
+      selenium-hub:
         condition: service_started
       database:
         condition: service_healthy
       redis:
         condition: service_healthy
 
-  selenium:
-    container_name: selenium
-    hostname: ${SELENIUM_HOST}
-    image: selenium/standalone-chrome
+  chrome:
+    container_name: chrome
+    image: selenium/node-chrome:4.11.0-20230801
+    shm_size: 2gb
+    restart: always
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - selenium-hub
+
+  selenium-hub:
+    container_name: selenium-hub
+    hostname: selenium
+    restart: always
+    image: selenium/hub:4.11.0-20230801
     ports:
-      - '4444:4444'
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
 
   database:
-    image: mysql:8.1.0
     container_name: database
     hostname: ${DB_HOST}
+    image: mysql:8.1.0
     ports:
       - '3306:3306'
     env_file:
@@ -69,9 +84,9 @@ services:
       retries: 5
 
   redis:
-    image: redis:alpine
     container_name: redis
     hostname: ${REDIS_HOST}
+    image: redis:alpine
     ports:
       - '6379:6379'
     env_file:
