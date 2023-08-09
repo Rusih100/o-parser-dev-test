@@ -55,7 +55,9 @@ class OzonParser(AbstractChromeParser):
         comments_amount = int(comments_amount)
         name = body.pop()
 
-        url = raw_card.find_element(by=By.TAG_NAME, value="a").get_attribute("href")
+        url = raw_card.find_element(by=By.TAG_NAME, value="a").get_attribute(
+            "href"
+        )
 
         return Card(
             name=name,

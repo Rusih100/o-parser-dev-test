@@ -153,7 +153,9 @@ REST_FRAMEWORK = {
 CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 
 # Опциональные настройки Celery
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")  # Для хранения результатов задач
+CELERY_RESULT_BACKEND = env(
+    "CELERY_RESULT_BACKEND"
+)  # Для хранения результатов задач
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

@@ -12,7 +12,9 @@ from products_api.parsers.ozon_parser import Card, OzonParser
 def parsing_product_task(product_count: int) -> None:
     try:
         parser = OzonParser(webdriver_url=settings.SELENIUM_URL)
-        products: List[NamedTuple] = parser.parse_website(objects_count=product_count)
+        products: List[NamedTuple] = parser.parse_website(
+            objects_count=product_count
+        )
     except Exception as e:
         send_error_alert(f"Произошла ошибка парсинга: {e}")
         return
@@ -31,7 +33,9 @@ def parsing_product_task(product_count: int) -> None:
                 url=product.url,
             )
     except Exception as e:
-        send_error_alert(f"Произошла ошибка при добавлении данных в базу данных: {e}")
+        send_error_alert(
+            f"Произошла ошибка при добавлении данных в базу данных: {e}"
+        )
         return
 
     products: List[Card]
