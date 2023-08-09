@@ -1,8 +1,70 @@
 version: '3'
 
 services:
-  db:
-    image: mysql:5.7
+  django:
+    container_name: django
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    restart: always
+    command: sh prestart.sh
+    depends_on:
+      selenium-hub:
+        condition: service_started
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    container_name: worker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
+    command: poetry run poetry run celery -A django_ozon_parser worker --loglevel=info
+    depends_on:
+      django:
+        condition: service_started
+      selenium-hub:
+        condition: service_started
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  chrome:
+    container_name: chrome
+    image: selenium/node-chrome:4.11.0-20230801
+    shm_size: 2gb
+    restart: always
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - selenium-hub
+
+  selenium-hub:
+    container_name: selenium-hub
+    hostname: selenium
+    restart: always
+    image: selenium/hub:4.11.0-20230801
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+
+  database:
+    container_name: database
+    hostname: ${DB_HOST}
+    image: mysql:8.1.0
     ports:
       - '3306:3306'
     env_file:
@@ -15,9 +77,15 @@ services:
     volumes:
       - ./docker_data/db_django:/var/lib/mysql
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    healthcheck:
+      test: mysql ${DB_NAME} --user=${DB_USER} --password='${DB_PASSWORD}' --silent --execute "SELECT 1;"
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # TODO: Пароль к redis
   redis:
+    container_name: redis
+    hostname: ${REDIS_HOST}
     image: redis:alpine
     ports:
       - '6379:6379'
@@ -26,3 +94,8 @@ services:
     restart: always
     volumes:
       - ./docker_data/redis_data:/var/lib/redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

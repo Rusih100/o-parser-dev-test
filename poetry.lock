@@ -430,23 +430,23 @@ files = [
 
 [[package]]
 name = "django"
-version = "3.1.14"
-description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
+version = "4.2.4"
+description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "Django-3.1.14-py3-none-any.whl", hash = "sha256:0fabc786489af16ad87a8c170ba9d42bfd23f7b699bd5ef05675864e8d012859"},
-    {file = "Django-3.1.14.tar.gz", hash = "sha256:72a4a5a136a214c39cf016ccdd6b69e2aa08c7479c66d93f3a9b5e4bb9d8a347"},
+    {file = "Django-4.2.4-py3-none-any.whl", hash = "sha256:860ae6a138a238fc4f22c99b52f3ead982bb4b1aad8c0122bcd8c8a3a02e409d"},
+    {file = "Django-4.2.4.tar.gz", hash = "sha256:7e4225ec065e0f354ccf7349a22d209de09cc1c074832be9eb84c51c1799c432"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.2.10,<4"
-pytz = "*"
-sqlparse = ">=0.2.2"
+asgiref = ">=3.6.0,<4"
+sqlparse = ">=0.3.1"
+tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
-argon2 = ["argon2-cffi (>=16.1.0)"]
+argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
@@ -483,18 +483,18 @@ testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
 
 [[package]]
 name = "django-mysql"
-version = "3.12.0"
+version = "4.11.0"
 description = "Django-MySQL extends Django's built-in MySQL and MariaDB support their specific features not available on other databases."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "django-mysql-3.12.0.tar.gz", hash = "sha256:2747964a1eeba38f98035c442ac5d32ebb602c460697f2da111c0f6d30245c69"},
-    {file = "django_mysql-3.12.0-py3-none-any.whl", hash = "sha256:a4ff093b3f45832f95224da164e04b99e844a2047bff423036bcd2422988ebe4"},
+    {file = "django_mysql-4.11.0-py3-none-any.whl", hash = "sha256:d4b2e9894465c37f40c1ea15c828c3cc4468c4d3ee6baed9a55775c297bd006e"},
+    {file = "django_mysql-4.11.0.tar.gz", hash = "sha256:16606debec965f8619413545d855dc2e5b3997ef6bc6cc2664cf8485a1016b69"},
 ]
 
 [package.dependencies]
-Django = ">=2.2"
+Django = ">=3.2"
 
 [[package]]
 name = "djangorestframework"
@@ -553,25 +553,6 @@ files = [
 test = ["pytest (>=6)"]
 
 [[package]]
-name = "flower"
-version = "2.0.0"
-description = "Celery Flower"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "flower-2.0.0-py2.py3-none-any.whl", hash = "sha256:571f9ed1c57a622e862de35eceb8a4244f023fbcfb7175f53e45ebe679f46d90"},
-    {file = "flower-2.0.0.tar.gz", hash = "sha256:5657785d728a54914256c34fd0551fe2d7152aab08062ebc645bf86b97b8aec5"},
-]
-
-[package.dependencies]
-celery = ">=5.0.5"
-humanize = "*"
-prometheus-client = ">=0.8.0"
-pytz = "*"
-tornado = ">=5.0.0,<7.0.0"
-
-[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -582,21 +563,6 @@ files = [
     {file = "h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761"},
     {file = "h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d"},
 ]
-
-[[package]]
-name = "humanize"
-version = "4.7.0"
-description = "Python humanize utilities"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "humanize-4.7.0-py3-none-any.whl", hash = "sha256:df7c429c2d27372b249d3f26eb53b07b166b661326e0325793e0a988082e3889"},
-    {file = "humanize-4.7.0.tar.gz", hash = "sha256:7ca0e43e870981fa684acb5b062deb307218193bca1a01f2b2676479df849b3a"},
-]
-
-[package.extras]
-tests = ["freezegun", "pytest", "pytest-cov"]
 
 [[package]]
 name = "idna"
@@ -756,21 +722,6 @@ files = [
 [package.extras]
 docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.1)", "sphinx-autodoc-typehints (>=1.24)"]
 test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.4)", "pytest-cov (>=4.1)", "pytest-mock (>=3.11.1)"]
-
-[[package]]
-name = "prometheus-client"
-version = "0.17.1"
-description = "Python client for the Prometheus monitoring system."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "prometheus_client-0.17.1-py3-none-any.whl", hash = "sha256:e537f37160f6807b8202a6fc4764cdd19bac5480ddd3e0d463c3002b34462101"},
-    {file = "prometheus_client-0.17.1.tar.gz", hash = "sha256:21e674f39831ae3f8acde238afd9a27a37d0d2fb5a28ea094f0ce25d2cbf2091"},
-]
-
-[package.extras]
-twisted = ["twisted"]
 
 [[package]]
 name = "prompt-toolkit"
@@ -1002,27 +953,6 @@ doc = ["sphinx"]
 test = ["pytest", "pytest-cov"]
 
 [[package]]
-name = "tornado"
-version = "6.3.2"
-description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
-category = "main"
-optional = false
-python-versions = ">= 3.8"
-files = [
-    {file = "tornado-6.3.2-cp38-abi3-macosx_10_9_universal2.whl", hash = "sha256:c367ab6c0393d71171123ca5515c61ff62fe09024fa6bf299cd1339dc9456829"},
-    {file = "tornado-6.3.2-cp38-abi3-macosx_10_9_x86_64.whl", hash = "sha256:b46a6ab20f5c7c1cb949c72c1994a4585d2eaa0be4853f50a03b5031e964fc7c"},
-    {file = "tornado-6.3.2-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c2de14066c4a38b4ecbbcd55c5cc4b5340eb04f1c5e81da7451ef555859c833f"},
-    {file = "tornado-6.3.2-cp38-abi3-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:05615096845cf50a895026f749195bf0b10b8909f9be672f50b0fe69cba368e4"},
-    {file = "tornado-6.3.2-cp38-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5b17b1cf5f8354efa3d37c6e28fdfd9c1c1e5122f2cb56dac121ac61baa47cbe"},
-    {file = "tornado-6.3.2-cp38-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:29e71c847a35f6e10ca3b5c2990a52ce38b233019d8e858b755ea6ce4dcdd19d"},
-    {file = "tornado-6.3.2-cp38-abi3-musllinux_1_1_i686.whl", hash = "sha256:834ae7540ad3a83199a8da8f9f2d383e3c3d5130a328889e4cc991acc81e87a0"},
-    {file = "tornado-6.3.2-cp38-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:6a0848f1aea0d196a7c4f6772197cbe2abc4266f836b0aac76947872cd29b411"},
-    {file = "tornado-6.3.2-cp38-abi3-win32.whl", hash = "sha256:7efcbcc30b7c654eb6a8c9c9da787a851c18f8ccd4a5a3a95b05c7accfa068d2"},
-    {file = "tornado-6.3.2-cp38-abi3-win_amd64.whl", hash = "sha256:0c325e66c8123c606eea33084976c832aa4e766b7dff8aedd7587ea44a604cdf"},
-    {file = "tornado-6.3.2.tar.gz", hash = "sha256:4b927c4f19b71e627b13f3db2324e4ae660527143f9e1f2e2fb404f3a187e2ba"},
-]
-
-[[package]]
 name = "trio"
 version = "0.22.2"
 description = "A friendly Python library for async concurrency and I/O"
@@ -1146,4 +1076,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "75ed2fc785769f847f977a83e401700c2a0dd00f183973eb78d7a765b2939966"
+content-hash = "ec443ae64df8533224d7d5eedafc00496aea73be8d30aea2c7db7fff74f91bf7"
