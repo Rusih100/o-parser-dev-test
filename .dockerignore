@@ -1,0 +1,7 @@
+.idea
+.gitignore
+.git
+drivers
+example.env
+docker_data
+

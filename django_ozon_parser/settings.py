@@ -42,8 +42,8 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
-    'adminlte3',
-    'adminlte3_theme',
+    "adminlte3",
+    "adminlte3_theme",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -153,12 +153,14 @@ REST_FRAMEWORK = {
 CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 
 # Опциональные настройки Celery
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")  # Для хранения результатов задач
+CELERY_RESULT_BACKEND = env(
+    "CELERY_RESULT_BACKEND"
+)  # Для хранения результатов задач
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
-PARSER_WEB_DRIVER_PATH = BASE_DIR / "drivers" / "chromedriver.exe"
+SELENIUM_URL = env("SELENIUM_URL")
 
 BOT_TOKEN = env("BOT_TOKEN")
 CHAT_ALERT = env("CHAT_ALERT")
