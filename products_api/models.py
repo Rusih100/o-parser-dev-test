@@ -7,6 +7,7 @@ class Product(models.Model):
     name = models.TextField(max_length=300)
     price = models.IntegerField()
     discounted_price = models.IntegerField()
+    discount = models.IntegerField()
     rating = models.FloatField()
     comments_amount = models.IntegerField()
     delivery_date = models.CharField(max_length=30)

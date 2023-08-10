@@ -31,6 +31,7 @@ def parsing_product_task(product_count: int) -> None:
                 delivery_date=product.delivery_date,
                 tag=product.tag,
                 url=product.url,
+                discount=product.discount,
             )
     except Exception as e:
         send_error_alert(

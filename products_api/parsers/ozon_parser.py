@@ -46,8 +46,8 @@ class OzonParser(AbstractChromeParser):
             tag = ""
 
         price = self._parse_numbers(body.pop(0))
-        discounted_price = self._parse_numbers(body.pop(0))
         discount = self._parse_numbers(body.pop(0))
+        discounted_price = self._parse_numbers(body.pop(0))
 
         delivery_date = body.pop()
         rating, comments_amount = body.pop().split()
